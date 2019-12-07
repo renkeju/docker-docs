@@ -1,0 +1,305 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Welcome to Docker’s documentation! &mdash; Docker alphe documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="入门" href="getting_started/getting_started.html" />
+    <link href="_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home"> Docker
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/getting_started.html">入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker/docker.html">Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dockerfile/dockerfile.html">Dockerfile 指令</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Docker</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Welcome to Docker’s documentation!</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="welcome-to-docker-s-documentation">
+<h1>Welcome to Docker’s documentation!<a class="headerlink" href="#welcome-to-docker-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/getting_started.html">入门</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/getting_started.html#id2">概念</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting_started/getting_started.html#lxc-linux-container">LXC(LinuX container)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started/getting_started.html#chroot">chroot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started/getting_started.html#linux-namespace">Linux Namespace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started/getting_started.html#cgroups">cgroups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started/getting_started.html#linux-container">Linux container</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started/getting_started.html#union-mount">Union Mount</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started/getting_started.html#oci">OCI</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docker/docker.html">Docker</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docker/docker.html#id1">总体架构</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#docker-client">docker Client [发起请求]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#docker-daemin">Docker Daemin [后台守护进程]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#docker-registry">Docker Registry [镜像注册中心]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#graph-docker">Graph [docker 内部数据库]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#driver">Driver [执行部分]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#libcontainer">libcontainer [函数库]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#docker-container">Docker container [服务交付的最终形式]</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docker/docker.html#id2">基础用法</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id3">安装</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id4">docker 程序环境</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id5">常用操作</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id6">状态转换</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docker/docker.html#id7">网络模型</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id8">简单的 Docker 架构</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#bridge">bridge 模式网络</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#host">host 模式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#container">container 模式网络</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#none">none 模式网络</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id9">其他网络话题</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id10">跨主机网络</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docker/docker.html#id11">网络基础使用</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id12">与 bridge 相关的参数</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id13">打开入站通讯</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docker/docker.html#id14">存储卷</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id15">什么是卷</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#vs">有状态服务 VS 无状态服务</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#volume">volume 的几种形态</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#volume-volume">volume 删除和孤独 volume 清理</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docker/docker.html#dockerfile">Dockerfile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#from">FROM 指定基础镜像</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#run">RUN 执行命令</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id16">构建镜像</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#context">镜像构建上下文（Context）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id17">其他构建镜像方法</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docker/docker.html#id18">多阶段构建</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id19">之前的做法</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id20">使用多阶段构建</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id21">只构建某一阶段的镜像</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id22">构建时聪其他镜像复制文件</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docker/docker.html#id23">Docker Registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#registry">Registry 分类</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id24">私有仓库操作</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id25">注意事项</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docker/docker.html#id26">资源限制</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#cpu">CPU 资源</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id27">内存资源</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#io">IO 资源（磁盘）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docker/docker.html#id28">总结</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dockerfile/dockerfile.html">Dockerfile 指令</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dockerfile/dockerfile.html#copy">COPY 复制文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dockerfile/dockerfile.html#add">ADD 更高级的复制文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dockerfile/dockerfile.html#cmd">CMD 容器启动命令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dockerfile/dockerfile.html#entrypoint">ENTRYPOINT 入口点</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dockerfile/dockerfile.html#env">ENV 设置环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dockerfile/dockerfile.html#arg">ARG 构建参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dockerfile/dockerfile.html#volume">VOLUME 定义匿名卷</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dockerfile/dockerfile.html#expose">EXPOSE 声明端口</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dockerfile/dockerfile.html#workdir">WORKDIR 指定工作目录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dockerfile/dockerfile.html#user">USER 指定当前用户</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dockerfile/dockerfile.html#healthcheck">HEALTHCHECK 健康检查</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dockerfile/dockerfile.html#onbuild">ONBUILD 为他人做嫁衣裳</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="getting_started/getting_started.html" class="btn btn-neutral float-right" title="入门" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Renkeju
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

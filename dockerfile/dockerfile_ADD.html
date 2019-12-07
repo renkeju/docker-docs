@@ -1,0 +1,209 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ADD 更高级的复制文件 &mdash; Docker alphe documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link href="../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Docker
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/getting_started.html">入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/docker.html">Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dockerfile.html">Dockerfile 指令</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Docker</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>ADD 更高级的复制文件</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/dockerfile/dockerfile_ADD.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="add">
+<h1>ADD 更高级的复制文件<a class="headerlink" href="#add" title="Permalink to this headline">¶</a></h1>
+<p><span class="guilabel">ADD</span> 指令和 <span class="guilabel">COPY</span> 的格式和性质基本一致。但是在 <span class="guilabel">COPY</span> 基础上增加了一些功能。</p>
+<p>比如 <code class="docutils literal notranslate"><span class="pre">&lt;source_path&gt;</span></code> 可以是一个 URL，这种情况下，Docker 引擎会试图去下载这个链接的文件放到 <code class="docutils literal notranslate"><span class="pre">&lt;destination_path&gt;</span></code> 去。下载后的文件权限自动设置为 <strong>600</strong>，如果这并不是想要的权限，那么还需要增加额外的一层 <span class="guilabel">RUN</span> 指令进行权限调整，另外，如果下载的是个压缩包，需要解压缩，也一样还需要额外的一层 <span class="guilabel">RUN</span> 指令进行解压缩。所以不如直接使用 <span class="guilabel">RUN</span> 指令，然后使用 wget 或者 curl 工具下载，处理权限、解压缩、然后清理无用文件更合理。因此，这个功能其实并不实用，而且不推荐使用。</p>
+<p>如果 <code class="docutils literal notranslate"><span class="pre">&lt;source_path&gt;</span></code> 为一个 tar 压缩文件的话，压缩格式为 <code class="docutils literal notranslate"><span class="pre">gzip</span></code> <code class="docutils literal notranslate"><span class="pre">bzip2</span></code> 以及 <code class="docutils literal notranslate"><span class="pre">xz</span></code>
+的情况下，<span class="guilabel">ADD</span> 指令将会自动解压缩这个压缩文件到 <code class="docutils literal notranslate"><span class="pre">&lt;destination_path&gt;</span></code> 去。</p>
+<p>在某些情况下，这个自动解压缩的功能非常游泳，比如官方镜像 <a class="reference external" href="https://github.com/tianon/docker-brew-ubuntu-core/blob/c7e9f7353aa24d1c35f501e06382aed1b540e85f/bionic/Dockerfile">ubuntu Dockerfile</a> 中：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>FROM scratch
+ADD ubuntu-bionic-core-cloudimg-amd64-root.tar.gz /
+...
+</pre></div>
+</div>
+<p>但在某些情况下，如果我们真的希望复制这个压缩文件进去，而不解压缩，这时就不可以使用 <span class="guilabel">ADD</span> 命令了。</p>
+<p>在 Docker 官方的 Dockerfile 最佳实践文档 中要求，尽可能的使用 <span class="guilabel">COPY</span>，因为 <span class="guilabel">COPY</span> 的语义很明确，就是复制文件而已，而 <span class="guilabel">ADD</span> 则包含了更复杂的功能，其行为也不一定很清晰。最适合使用 <span class="guilabel">ADD</span> 的场合，就是所提及的需要自动解压缩的场合。</p>
+<p>另外需要注意的是，<span class="guilabel">ADD</span> 指令会令镜像构建缓存失效，从而可能会令镜像构建变得比较缓慢。</p>
+<p>因此在 <span class="guilabel">COPY</span> 和 <span class="guilabel">ADD</span> 指令中选择的时候，可以遵循这样的原则，所有的文件复制均使用 <span class="guilabel">COPY</span> 指令，仅在需要自动解压缩的场合使用 <span class="guilabel">ADD</span>。</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Renkeju
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,286 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>网络基础使用 &mdash; Docker alphe documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link href="../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Docker
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/getting_started.html">入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker.html">Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dockerfile/dockerfile.html">Dockerfile 指令</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Docker</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>网络基础使用</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/docker/network_use.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>网络基础使用<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="bridge">
+<h2>与 bridge 相关的参数<a class="headerlink" href="#bridge" title="Permalink to this headline">¶</a></h2>
+<p>可以为 <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">container</span> <span class="pre">run</span></code> 命令使用</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">--hostname</span> <span class="pre">HOSTNAME</span></code> 选项为容器指定主机名，例如</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker container --rm --net<span class="o">=</span>bridge --hostname<span class="o">=</span>bbox.renkeju.com busybox:latest nslookup bbox.renkeju.com
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--dns</span> <span class="pre">DNS_SERVER_IP</span></code> 选项能够为容器指定所使用的 dns 服务器地址，例如</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker container run --dns <span class="m">8</span>.8.8.8 busybox:latest nslookup docker.com
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--add-host</span> <span class="pre">HOSTNAME:IP</span></code> 选项能够为容器指定本地主机名解析项，例如</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker container run --rm --dns <span class="m">8</span>.8.8.8 -add-host <span class="s2">&quot;docker.com:172.16.0.100&quot;</span> busybox:latest nslookup docker.com
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>打开入站通讯<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">--publish</span></code> 选项使用格式</p>
+<blockquote>
+<div><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">--publish</span> <span class="pre">&lt;ContainerPort&gt;</span></code></p>
+<blockquote>
+<div><p>将制定的容器端口映射至主机所有地址的一个动态端口</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--publish</span> <span class="pre">&lt;HostPort&gt;:&lt;ContainerPort&gt;</span></code></p>
+<blockquote>
+<div><p>将容器端口 &lt;ContainerPort&gt; 映射至指定的主机端口 &lt;hostPort&gt;</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--publish</span> <span class="pre">&lt;ip&gt;::&lt;ContainerPort&gt;</span></code></p>
+<blockquote>
+<div><p>将指定的容器端口 &lt;ContainerPort&gt; 映射至主机指定 &lt;ip&gt; 的动态端口</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--publish</span> <span class="pre">&lt;ip&gt;:&lt;hostPort&gt;:&lt;containerPort&gt;</span></code></p>
+<blockquote>
+<div><p>将指定的容器端口 &lt;containerPort&gt; 映射至主机指定 &lt;ip&gt; 的端口 &lt;hostPort&gt;</p>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>“动态端口” 指的是随机端口，具体的映射结果可以使用 docker port 命令查看</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ docker container port wordpresss_wordpress_1
+<span class="m">80</span>/tcp -&gt; <span class="m">0</span>.0.0.0:80
+</pre></div>
+</div>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">--publish-all</span></code> 选项将容器的所有计划要暴露端口全部都映射至主机端口</p></li>
+<li><p>计划要暴露的端口使用 <code class="docutils literal notranslate"><span class="pre">--expose</span></code> 选项指定</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker container run --detach --publish-all --expose <span class="m">3333</span> --expose <span class="m">2222</span> --name<span class="o">=</span>web01 busybox:latest /bin/httpd -p <span class="m">2222</span> -f
+</pre></div>
+</div>
+<ul>
+<li><p>查看映射结果</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker container port web01
+<span class="m">2222</span>/tcp -&gt; <span class="m">0</span>.0.0.0:32772
+<span class="m">3333</span>/tcp -&gt; <span class="m">0</span>.0.0.0:32771
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>如果不想使用默认的 docker0 桥接口，或者需要修改此桥接口的网络属性，可以通过 <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">daemon</span></code> 命令使用 <code class="docutils literal notranslate"><span class="pre">-b</span></code> <code class="docutils literal notranslate"><span class="pre">--bip</span></code> <code class="docutils literal notranslate"><span class="pre">--fixed-cidr</span></code> <code class="docutils literal notranslate"><span class="pre">--default-gateway</span></code> <code class="docutils literal notranslate"><span class="pre">--dns</span></code> <code class="docutils literal notranslate"><span class="pre">--mtu</span></code> 等选项进行设定。也可以通过修改 <code class="docutils literal notranslate"><span class="pre">/etc/docker/daemon.json</span></code> 配置文件设定。</p></li>
+<li><p>docker 守护进程的 C/S，默认仅监听 Unix Socket 格式的地址 <code class="docutils literal notranslate"><span class="pre">/var/run/docker.sock</span></code></p>
+<blockquote>
+<div><p>如果使用 TCP 套接字，需要修改 <code class="docutils literal notranslate"><span class="pre">/etc/docker/daemon.json</span></code> 文件。
+使用 <code class="docutils literal notranslate"><span class="pre">-H|--host</span></code> 选项可远程链接开启 TCP 套接字文件的 docker server。</p>
+</div></blockquote>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Renkeju
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
