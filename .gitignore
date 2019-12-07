@@ -1,3 +1,4 @@
 # sphinx build
 .vscode
 .DS_Store
+_build
