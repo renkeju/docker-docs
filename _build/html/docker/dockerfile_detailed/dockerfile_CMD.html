@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>CMD 容器启动命令 &#8212; Docker alphe documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="cmd">
+<h1>CMD 容器启动命令<a class="headerlink" href="#cmd" title="Permalink to this headline">¶</a></h1>
+<p><span class="guilabel">CMD</span> 指令的格式和 <span class="guilabel">RUN</span> 相似，也是两种格式：</p>
+<ul class="simple">
+<li><p><strong>shell</strong> 格式： <code class="docutils literal notranslate"><span class="pre">CMD</span> <span class="pre">&lt;command&gt;</span></code></p></li>
+<li><p><strong>exec</strong> 格式： <code class="docutils literal notranslate"><span class="pre">CMD</span> <span class="pre">[&quot;executable&quot;,</span> <span class="pre">&quot;arg1&quot;,</span> <span class="pre">&quot;arg2&quot;...]</span></code></p></li>
+<li><p>参数列表格式： <code class="docutils literal notranslate"><span class="pre">CMD</span> <span class="pre">[&quot;arg1&quot;,</span> <span class="pre">&quot;arg2&quot;...]</span></code> 在指定了 <span class="guilabel">ENTRYPOINT</span> 指令后，用 <span class="guilabel">CMD</span> 指定具体的参数。</p></li>
+</ul>
+<p>之前介绍容器的时候曾经说过，Docker 不是虚拟机，容器就是进程。既然是进程，那么在启动容器的时候，需要指定所运行的程序及参数。<span class="guilabel">CMD</span> 指令就是用于指定默认的容器主进程的启动命令的。</p>
+<p>在运行时可以指定新的命令来替代镜像设置重的这个默认命令，比如，<a class="reference external" href="https://store.docker.com/images/ubuntu">ubuntu</a> 镜像默认的 <span class="guilabel">CMD</span> 是 <code class="docutils literal notranslate"><span class="pre">/bin/bash</span></code> ，如果我们直接 <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">container</span> <span class="pre">run</span> <span class="pre">--tty</span> <span class="pre">--interactive</span> <span class="pre">ubuntu</span></code> 的话，会直接进入 bash。我们也可以在运行时指定运行别的命令，如 <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">container</span> <span class="pre">run</span> <span class="pre">--tty</span> <span class="pre">--interactive</span> <span class="pre">ubuntu</span> <span class="pre">cat</span> <span class="pre">/etc/os-release</span></code> 。这就是用 <code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">/etc/os-release</span></code> 命令替换了默认的 <code class="docutils literal notranslate"><span class="pre">/bin/bash</span></code> 命令了，输出了系统版本信息。</p>
+<p>在指令格式上，一般推荐使用 <strong>exec</strong> 格式，这类格式在解析时会被解析为 JSON 数组，因此一定要使用 <code class="docutils literal notranslate"><span class="pre">&quot;</span></code> ，而不要使用单引号。</p>
+<p>如果使用 <strong>shell</strong> 格式的话，实际的命令会被包装为 <code class="docutils literal notranslate"><span class="pre">sh</span> <span class="pre">-c</span></code> 的参数的形式进行执行。比如：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CMD echo $HOME
+</pre></div>
+</div>
+<p>在实际执行中，会将其变更为：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CMD [ &quot;sh&quot;, &quot;-c&quot;, &quot;echo $HOME&quot; ]
+</pre></div>
+</div>
+<p>这就是为什么我们可以使用环境变量的原因，因为这些环境变量会被 shell 进行解析处理。</p>
+<p>提到 <span class="guilabel">CMD</span> 就不得不提容器中应用在前台执行和后台执行的问题。初学者常常会混淆。</p>
+<p>Docker 不是虚拟机，容器中的应用都应该在前台执行，而不是像虚拟机、物理机里面那样，用 upstart/systemd 去启动后台服务，容器内没有后台服务的概念。</p>
+<p>一些初学者将 <span class="guilabel">CMD</span> 写为：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CMD service nginx start
+</pre></div>
+</div>
+<p>然后发现容器执行后就立即退出了。甚至在容器内去使用 systemctl 命令结果却发现根本执行不了。这就是因为没有搞明白前台、后台的概念，没有区分容器和虚拟机的差异，依旧在以传统虚拟机的角度去理解容器。</p>
+<p>对于容器而言，其启动程序就是容器应用进程，容器就是为了主进程而存在的，主进程退出，容器就失去了存在的意义，从而退出，其他辅助进程不是它需要关心的东西。</p>
+<p>而使用 <code class="docutils literal notranslate"><span class="pre">service</span> <span class="pre">nginx</span> <span class="pre">start</span></code> 命令，则是希望 upstart 以后台守护进程的形式启动 nginx 服务。而刚才说了 <code class="docutils literal notranslate"><span class="pre">CMD</span> <span class="pre">service</span> <span class="pre">nginx</span> <span class="pre">start</span></code> 会被理解为 <code class="docutils literal notranslate"><span class="pre">CMD</span> <span class="pre">[</span> <span class="pre">&quot;sh&quot;,</span> <span class="pre">&quot;-c&quot;,</span> <span class="pre">&quot;service</span> <span class="pre">nginx</span> <span class="pre">start&quot;</span> <span class="pre">]</span></code> ，因此主进程实际上是 <code class="docutils literal notranslate"><span class="pre">sh</span></code> 。那么当 <code class="docutils literal notranslate"><span class="pre">service</span> <span class="pre">ngin</span> <span class="pre">start</span></code> 命令结束后， <code class="docutils literal notranslate"><span class="pre">sh</span></code> 也就结束了， <code class="docutils literal notranslate"><span class="pre">sh</span></code> 作为住进称退出了，自然就会令容器退出。</p>
+<p>正确的做法是直接执行 nginx 可执行文件，并且要求以前台形式运行。</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CMD [ &quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot; ]
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Docker</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started/getting_started.html">入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker.html">Docker</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Renkeju.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/docker/dockerfile_detailed/dockerfile_CMD.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

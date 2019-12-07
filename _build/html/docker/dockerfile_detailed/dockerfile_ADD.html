@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>ADD 更高级的复制文件 &#8212; Docker alphe documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="add">
+<h1>ADD 更高级的复制文件<a class="headerlink" href="#add" title="Permalink to this headline">¶</a></h1>
+<p><span class="guilabel">ADD</span> 指令和 <span class="guilabel">COPY</span> 的格式和性质基本一致。但是在 <span class="guilabel">COPY</span> 基础上增加了一些功能。</p>
+<p>比如 <code class="docutils literal notranslate"><span class="pre">&lt;source_path&gt;</span></code> 可以是一个 URL，这种情况下，Docker 引擎会试图去下载这个链接的文件放到 <code class="docutils literal notranslate"><span class="pre">&lt;destination_path&gt;</span></code> 去。下载后的文件权限自动设置为 <strong>600</strong>，如果这并不是想要的权限，那么还需要增加额外的一层 <span class="guilabel">RUN</span> 指令进行权限调整，另外，如果下载的是个压缩包，需要解压缩，也一样还需要额外的一层 <span class="guilabel">RUN</span> 指令进行解压缩。所以不如直接使用 <span class="guilabel">RUN</span> 指令，然后使用 wget 或者 curl 工具下载，处理权限、解压缩、然后清理无用文件更合理。因此，这个功能其实并不实用，而且不推荐使用。</p>
+<p>如果 <code class="docutils literal notranslate"><span class="pre">&lt;source_path&gt;</span></code> 为一个 tar 压缩文件的话，压缩格式为 <code class="docutils literal notranslate"><span class="pre">gzip</span></code> <code class="docutils literal notranslate"><span class="pre">bzip2</span></code> 以及 <code class="docutils literal notranslate"><span class="pre">xz</span></code>
+的情况下，<span class="guilabel">ADD</span> 指令将会自动解压缩这个压缩文件到 <code class="docutils literal notranslate"><span class="pre">&lt;destination_path&gt;</span></code> 去。</p>
+<p>在某些情况下，这个自动解压缩的功能非常游泳，比如官方镜像 <a class="reference external" href="https://github.com/tianon/docker-brew-ubuntu-core/blob/c7e9f7353aa24d1c35f501e06382aed1b540e85f/bionic/Dockerfile">ubuntu Dockerfile</a> 中：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>FROM scratch
+ADD ubuntu-bionic-core-cloudimg-amd64-root.tar.gz /
+...
+</pre></div>
+</div>
+<p>但在某些情况下，如果我们真的希望复制这个压缩文件进去，而不解压缩，这时就不可以使用 <span class="guilabel">ADD</span> 命令了。</p>
+<p>在 Docker 官方的 Dockerfile 最佳实践文档 中要求，尽可能的使用 <span class="guilabel">COPY</span>，因为 <span class="guilabel">COPY</span> 的语义很明确，就是复制文件而已，而 <span class="guilabel">ADD</span> 则包含了更复杂的功能，其行为也不一定很清晰。最适合使用 <span class="guilabel">ADD</span> 的场合，就是所提及的需要自动解压缩的场合。</p>
+<p>另外需要注意的是，<span class="guilabel">ADD</span> 指令会令镜像构建缓存失效，从而可能会令镜像构建变得比较缓慢。</p>
+<p>因此在 <span class="guilabel">COPY</span> 和 <span class="guilabel">ADD</span> 指令中选择的时候，可以遵循这样的原则，所有的文件复制均使用 <span class="guilabel">COPY</span> 指令，仅在需要自动解压缩的场合使用 <span class="guilabel">ADD</span>。</p>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Docker</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started/getting_started.html">入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker.html">Docker</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Renkeju.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/docker/dockerfile_detailed/dockerfile_ADD.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

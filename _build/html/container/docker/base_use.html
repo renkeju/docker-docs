@@ -1,0 +1,711 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>基础用法 &#8212; Docker alphe documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>基础用法<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id2">
+<h2>安装<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>依赖的基础环境</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>64 bits CPU</p></li>
+<li><p>Linux Kernel 3.10+</p></li>
+<li><p>Linux Kernel cgroups and namespaces</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>CentOS 7+</p>
+<blockquote>
+<div><ul>
+<li><p>“Extras” repository</p>
+<blockquote>
+<div><p>不建议通过 CentOS 默认仓库安装 Docker，版本过旧</p>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Docker Daemon</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>systemctl start docker.service</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>个人推荐使用 daocloud 安装 docker，安装方式详见 <a class="reference external" href="https://download.daocloud.io/Docker_Mirror/Docker">daocloud 产品中心 docker 安装方式</a></p>
+</div>
+<div class="section" id="docker">
+<h2>docker 程序环境<a class="headerlink" href="#docker" title="Permalink to this headline">¶</a></h2>
+<p>docker 环境配置都可以由 <code class="docutils literal notranslate"><span class="pre">/etc/docker/daemon.none</span></code> 这个文件所控制。docker 安装后默认没有 daemon.none 这个配置文件，需要手工创建。</p>
+<p>一般情况下，配置文件 daemin.none 中配置的项目参数，在启动参数中同样适用，有些可能不一样（具体可以查看官方文档），但需要注意的一点，配置文件中如果已经由摸个配置项，则无法在启动参数中增加，会出现冲突的错误。</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>如果在 daemon.none 文件中进行配置，需要 docker 版本高于 1.12.6（在这个版本不生效，1.13.1 以上是生效的）</p>
+</div>
+<ul>
+<li><p>指定网桥网络</p>
+<blockquote>
+<div><p>给 docker0 分配特定的IP地址，并设置子网掩码</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    &quot;bip&quot;: &quot;192.168.199.5/24&quot;
+}
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>指定网桥网络范围</p>
+<blockquote>
+<div><p>限制 docker0 分配给容器的IP的范围。必须是 docker0 所在网络范围内的一个子网，或是由 <code class="docutils literal notranslate"><span class="pre">--bridge</span></code> 指定的网桥的IP所在网络范围内的一个子网。此后，为容器分配IP时就会从这个范围内选择一个可用的IP地址。</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    &quot;fixed-cidr&quot;: &quot;10.20.0.0/16&quot;,
+    &quot;fixed-cide-v6&quot;: &quot;2001:db8::/64&quot;
+}
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>最大传输单元</p>
+<blockquote>
+<div><p>覆盖 docker0 默认的最大传输单元</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    &quot;mtu&quot;: 1500
+}
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>指定 DNS</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    &quot;dns&quot;: [&quot;8.8.8.8&quot;, &quot;8.8.4.4&quot;]
+}
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>指定监听模式</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    &quot;hosts&quot;: [&quot;tcp://0.0.0.0:2376&quot;, &quot;unix:///var/run/docker.sock&quot;]
+}
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>镜像加速器</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>// 配置单个
+{
+    &quot;registry-mirrors&quot;: [&quot;https://registry.docker-cn.com&quot;]
+}
+
+// 配置多个
+{
+    &quot;registry-mirrors&quot;: [&quot;https://registry.docker-cn.com&quot;, &quot;https://docker.mirrors.ustc.edu.cn/&quot;]
+}
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>日志</p>
+<blockquote>
+<div><p>log-level 的有效值包括：</p>
+<ul class="simple">
+<li><p>debug</p></li>
+<li><p>info</p></li>
+<li><p>warn</p></li>
+<li><p>error</p></li>
+<li><p>fatal</p></li>
+</ul>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    &quot;debug&quot;: true,
+    &quot;log-level&quot;: &quot;info&quot;
+}
+</pre></div>
+</div>
+<p>指定日志格式、大小和数量等。</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    &quot;log-driver&quot;: &quot;json-file&quot;,
+    &quot;log-opts&quot;: {
+        &quot;max-size&quot;: &quot;5m&quot;,
+        &quot;max-file&quot;: &quot;5&quot;
+    }
+}
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>监控 Prometheus</p>
+<blockquote>
+<div><p><a class="reference external" href="https://docs.docker.com/engine/admin/prometheus/#configure-docker">https://docs.docker.com/engine/admin/prometheus/#configure-docker</a></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    &quot;metrics-addr&quot;: &quot;127.0.0.1:9323&quot;,
+    &quot;experimental&quot;: true
+}
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>保持容器在线</p>
+<blockquote>
+<div><p><a class="reference external" href="https://docs.docker.com/engine/admin/live-restore/#enable-the-live-restore-option">https://docs.docker.com/engine/admin/live-restore/#enable-the-live-restore-option</a></p>
+<p>当 dockerd 进程死掉后，依旧保持容器存活。</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    &quot;live-restore&quot;: true
+}
+</pre></div>
+</div>
+<p>Linux 重载 docker daemon</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ sudo <span class="nb">kill</span> -SIGHUP <span class="k">$(</span>pidof dockerd<span class="k">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>信任私有仓库地址</p>
+<blockquote>
+<div><p>docker 默认只信任 HTTPS 协议私有镜像仓库，如果搭建内网私有镜像仓库使用 HTTP 协议，需要指定信任仓库。</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    &quot;insecure-registries&quot;: [ &quot;10.10.172.203:5000&quot; ]
+}
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>设置 镜像、容器、卷 存放目录和驱动</p>
+<blockquote>
+<div><p><a class="reference external" href="https://docs.docker.com/engine/admin/systemd/#runtime-directory-and-storage-driver">https://docs.docker.com/engine/admin/systemd/#runtime-directory-and-storage-driver</a></p>
+<p>下述两个参数可以单独使用</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    &quot;graph&quot;: &quot;/mnt/docker-data&quot;,
+    &quot;storage-driver&quot;: &quot;overlay&quot;
+}
+</pre></div>
+</div>
+<p>graph 设置存放目录 —— Docker Root Dir /mnt/docker-data
+storage-driver 设置存储驱动 —— Storage Driver overlay</p>
+</div></blockquote>
+</li>
+<li><p>user namespace remap</p>
+<blockquote>
+<div><p><a class="reference external" href="https://docs.docker.com/engine/security/userns-remap/#enable-userns-remap-on-the-daemon">https://docs.docker.com/engine/security/userns-remap/#enable-userns-remap-on-the-daemon</a></p>
+<p>安全设置：用户空间重映射</p>
+<p>userns-remap 的值可以是 如果值字段 只有 一个值，那么该字段表示组。如果需要同时指定 用户和组，需要使用 冒号 分割，格式为 用户:组</p>
+<ul>
+<li><p>组</p></li>
+<li><p>用户:组</p></li>
+<li><p>组 或 用户 的值可以是组或用户的 名称 或 ID</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>testuser</p></li>
+<li><p>testuser:testuser</p></li>
+<li><p>1001</p></li>
+<li><p>1001:1001</p></li>
+<li><p>testuser:1001</p></li>
+<li><p>1001:testuser</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    &quot;userns-remap&quot;: &quot;testuser&quot;
+}
+
+// 或同时指定 用户和组，且使用 名称和ID
+{
+    &quot;userns-remap&quot;: &quot;testuser:1001&quot;
+}
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ dockerd --userns-remap=&quot;testuser:testuser&quot;
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>userns-remap 使用不多，但并不是不重要。目前不是默认启用的原因时因为一些应用会假定 uid 0 的用户拥有特殊能力，从而导致假定失败，然后报错退出。所以如果要启用 user id remap，你要充分测试一下。但是启用 uid remap 的安全性提高是明显的。</p>
+</div>
+</div></blockquote>
+</li>
+</ul>
+<p>配置完成后我们可以通过命令 <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">info</span></code> 查看 docker 详细信息</p>
+</div>
+<div class="section" id="id3">
+<h2>常用操作<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 24%" />
+<col style="width: 6%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>command</p></th>
+<th class="head"><p>content</p></th>
+<th class="head"><p>subobject</p></th>
+<th class="head"><p>subobject content</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td rowspan="4"><p>config</p></td>
+<td rowspan="4"><p>Manage Docker configs</p></td>
+<td><p>create</p></td>
+<td><p>Create a configuration file from a file or STDIN as content</p></td>
+</tr>
+<tr class="row-odd"><td><p>inspect</p></td>
+<td><p>Display detailed information on one or more configuration files</p></td>
+</tr>
+<tr class="row-even"><td><p>ls</p></td>
+<td><p>List configs</p></td>
+</tr>
+<tr class="row-odd"><td><p>rm</p></td>
+<td><p>Remove one or more configuration files</p></td>
+</tr>
+<tr class="row-even"><td rowspan="25"><p>container</p></td>
+<td rowspan="25"><p>Manage container</p></td>
+<td><p>attach</p></td>
+<td><p>Attach local standard input, output, and error streams to a running container</p></td>
+</tr>
+<tr class="row-odd"><td><p>commit</p></td>
+<td><p>Create a new image from a container’s changes</p></td>
+</tr>
+<tr class="row-even"><td><p>cp</p></td>
+<td><p>Copy files/folders between a container and the local filesystem</p></td>
+</tr>
+<tr class="row-odd"><td><p>create</p></td>
+<td><p>Create a new container</p></td>
+</tr>
+<tr class="row-even"><td><p>diff</p></td>
+<td><p>Inspect changes to files or directories on a container’s filesystem</p></td>
+</tr>
+<tr class="row-odd"><td><p>exec</p></td>
+<td><p>Run a command in a running container</p></td>
+</tr>
+<tr class="row-even"><td><p>export</p></td>
+<td><p>Export a container’s filesystem as a tar archive</p></td>
+</tr>
+<tr class="row-odd"><td><p>inspect</p></td>
+<td><p>Display detailed information on one or more containers</p></td>
+</tr>
+<tr class="row-even"><td><p>kill</p></td>
+<td><p>Kill one or more running containers</p></td>
+</tr>
+<tr class="row-odd"><td><p>logs</p></td>
+<td><p>Fetch the logs of a container</p></td>
+</tr>
+<tr class="row-even"><td><p>ls</p></td>
+<td><p>List containers</p></td>
+</tr>
+<tr class="row-odd"><td><p>pause</p></td>
+<td><p>Pause all processes whitin one or more containers</p></td>
+</tr>
+<tr class="row-even"><td><p>port</p></td>
+<td><p>List port mappings or a specific mapping for the container</p></td>
+</tr>
+<tr class="row-odd"><td><p>prune</p></td>
+<td><p>Remove all stopped containers</p></td>
+</tr>
+<tr class="row-even"><td><p>rename</p></td>
+<td><p>Rename a container</p></td>
+</tr>
+<tr class="row-odd"><td><p>restart</p></td>
+<td><p>Restart one or more containers</p></td>
+</tr>
+<tr class="row-even"><td><p>rm</p></td>
+<td><p>Remove one or more container</p></td>
+</tr>
+<tr class="row-odd"><td><p>run</p></td>
+<td><p>Run a command in a new container</p></td>
+</tr>
+<tr class="row-even"><td><p>start</p></td>
+<td><p>Start one or more stopped containers</p></td>
+</tr>
+<tr class="row-odd"><td><p>stars</p></td>
+<td><p>Display a live stream of container(s) resource usage statistics</p></td>
+</tr>
+<tr class="row-even"><td><p>stop</p></td>
+<td><p>Stop one or more running containers</p></td>
+</tr>
+<tr class="row-odd"><td><p>top</p></td>
+<td><p>Display the running processes of a containers</p></td>
+</tr>
+<tr class="row-even"><td><p>unpause</p></td>
+<td><p>Unpause all processes within one or more containers</p></td>
+</tr>
+<tr class="row-odd"><td><p>update</p></td>
+<td><p>Update configuration of one or more containers</p></td>
+</tr>
+<tr class="row-even"><td><p>wait</p></td>
+<td><p>Block until one or more containers stop, then print their exit codes</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="12"><p>image</p></td>
+<td rowspan="12"><p>Manage images</p></td>
+<td><p>build</p></td>
+<td><p>Build an image from Dockerfile</p></td>
+</tr>
+<tr class="row-even"><td><p>history</p></td>
+<td><p>Show the history of an image</p></td>
+</tr>
+<tr class="row-odd"><td><p>import</p></td>
+<td><p>Import the containers from a tarball to create a filesystem image</p></td>
+</tr>
+<tr class="row-even"><td><p>inspect</p></td>
+<td><p>Display detailed information on onw or more images</p></td>
+</tr>
+<tr class="row-odd"><td><p>load</p></td>
+<td><p>Load an image from a tar archive or STDIN</p></td>
+</tr>
+<tr class="row-even"><td><p>ls</p></td>
+<td><p>List images</p></td>
+</tr>
+<tr class="row-odd"><td><p>prune</p></td>
+<td><p>Remove unused images</p></td>
+</tr>
+<tr class="row-even"><td><p>pull</p></td>
+<td><p>Pull an image or a repository from a registry</p></td>
+</tr>
+<tr class="row-odd"><td><p>push</p></td>
+<td><p>Push an image or a repository to a registry</p></td>
+</tr>
+<tr class="row-even"><td><p>rm</p></td>
+<td><p>Remove one or more images</p></td>
+</tr>
+<tr class="row-odd"><td><p>save</p></td>
+<td><p>Save one or more images to a tar archive (streamed to STDOUT by default)</p></td>
+</tr>
+<tr class="row-even"><td><p>tag</p></td>
+<td><p>Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="7"><p>network</p></td>
+<td rowspan="7"><p>Manage networks</p></td>
+<td><p>connect</p></td>
+<td><p>Connect a container to a network</p></td>
+</tr>
+<tr class="row-even"><td><p>create</p></td>
+<td><p>Create a network</p></td>
+</tr>
+<tr class="row-odd"><td><p>disconnect</p></td>
+<td><p>Disconnect detailed information on one or more networks</p></td>
+</tr>
+<tr class="row-even"><td><p>inspect</p></td>
+<td><p>Display detailed information on one or more networks</p></td>
+</tr>
+<tr class="row-odd"><td><p>ls</p></td>
+<td><p>List networks</p></td>
+</tr>
+<tr class="row-even"><td><p>prune</p></td>
+<td><p>Remove all unused networks</p></td>
+</tr>
+<tr class="row-odd"><td><p>rm</p></td>
+<td><p>Remove one or more networks</p></td>
+</tr>
+<tr class="row-even"><td rowspan="7"><p>node</p></td>
+<td rowspan="7"><p>Manage Swarm node</p></td>
+<td><p>deamon</p></td>
+<td><p>Demote one or more nodes from manager in the swarm</p></td>
+</tr>
+<tr class="row-odd"><td><p>inspect</p></td>
+<td><p>Display detailed information on one or more nodes</p></td>
+</tr>
+<tr class="row-even"><td><p>ls</p></td>
+<td><p>List nodes in the swarm</p></td>
+</tr>
+<tr class="row-odd"><td><p>promote</p></td>
+<td><p>Promote one or more nodes to manager in the swarm</p></td>
+</tr>
+<tr class="row-even"><td><p>ps</p></td>
+<td><p>List tasks running on one or more nodes, defaults to current node</p></td>
+</tr>
+<tr class="row-odd"><td><p>rm</p></td>
+<td><p>Remove one or more nodes from the swarm</p></td>
+</tr>
+<tr class="row-even"><td><p>update</p></td>
+<td><p>Update a node</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="10"><p>plugin</p></td>
+<td rowspan="10"><p>Manage plugins</p></td>
+<td><p>create</p></td>
+<td><p>Create a plugin from a rootfs and configuration. Plugin data directory must contain config.json and rootfs directory.</p></td>
+</tr>
+<tr class="row-even"><td><p>disable</p></td>
+<td><p>Disable a plugin</p></td>
+</tr>
+<tr class="row-odd"><td><p>enable</p></td>
+<td><p>Enable a plugin</p></td>
+</tr>
+<tr class="row-even"><td><p>inspect</p></td>
+<td><p>Display detailed information on one or more plugins</p></td>
+</tr>
+<tr class="row-odd"><td><p>install</p></td>
+<td><p>Install a plugin</p></td>
+</tr>
+<tr class="row-even"><td><p>ls</p></td>
+<td><p>List plugins</p></td>
+</tr>
+<tr class="row-odd"><td><p>push</p></td>
+<td><p>Push a plugin to a registry</p></td>
+</tr>
+<tr class="row-even"><td><p>rm</p></td>
+<td><p>Remove one or more plugin</p></td>
+</tr>
+<tr class="row-odd"><td><p>set</p></td>
+<td><p>Change settings for a plugin</p></td>
+</tr>
+<tr class="row-even"><td><p>upgrade</p></td>
+<td><p>Upgrade an existing plugin</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>secret</p></td>
+<td rowspan="4"><p>Manage Docker secrets</p></td>
+<td><p>create</p></td>
+<td><p>Create a secret from a file or STDIN as content</p></td>
+</tr>
+<tr class="row-even"><td><p>inspect</p></td>
+<td><p>Display detailed information on onw or more secrets</p></td>
+</tr>
+<tr class="row-odd"><td><p>ls</p></td>
+<td><p>List secrets</p></td>
+</tr>
+<tr class="row-even"><td><p>rm</p></td>
+<td><p>Remove one or more secrets</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="9"><p>service</p></td>
+<td rowspan="9"><p>Manage service</p></td>
+<td><p>create</p></td>
+<td><p>Create a new service</p></td>
+</tr>
+<tr class="row-even"><td><p>inspect</p></td>
+<td><p>Display detailed information on one or more services</p></td>
+</tr>
+<tr class="row-odd"><td><p>logs</p></td>
+<td><p>Fetch the logs of a  service or task</p></td>
+</tr>
+<tr class="row-even"><td><p>ls</p></td>
+<td><p>List services</p></td>
+</tr>
+<tr class="row-odd"><td><p>ps</p></td>
+<td><p>List the tasks of one or more services</p></td>
+</tr>
+<tr class="row-even"><td><p>rm</p></td>
+<td><p>Remove one or more services</p></td>
+</tr>
+<tr class="row-odd"><td><p>rollback</p></td>
+<td><p>Revert changes to a service’s configuration</p></td>
+</tr>
+<tr class="row-even"><td><p>scale</p></td>
+<td><p>Scale one or multiple replicated services</p></td>
+</tr>
+<tr class="row-odd"><td><p>update</p></td>
+<td><p>Update a service</p></td>
+</tr>
+<tr class="row-even"><td rowspan="9"><p>stack</p></td>
+<td rowspan="9"><p>Manage Docker stacks</p></td>
+<td><p>create</p></td>
+<td><p>Create a new service</p></td>
+</tr>
+<tr class="row-odd"><td><p>inspect</p></td>
+<td><p>Display detailed information on one or more services</p></td>
+</tr>
+<tr class="row-even"><td><p>logs</p></td>
+<td><p>Fetch the logs of a service or task</p></td>
+</tr>
+<tr class="row-odd"><td><p>ls</p></td>
+<td><p>List services</p></td>
+</tr>
+<tr class="row-even"><td><p>ps</p></td>
+<td><p>List the tasks of one or more services</p></td>
+</tr>
+<tr class="row-odd"><td><p>rm</p></td>
+<td><p>Remove one or more services</p></td>
+</tr>
+<tr class="row-even"><td><p>rollback</p></td>
+<td><p>Revert changes to a service’s configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p>scale</p></td>
+<td><p>Scale one or multiple replicated services</p></td>
+</tr>
+<tr class="row-even"><td><p>update</p></td>
+<td><p>Update a services</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="8"><p>swarm</p></td>
+<td rowspan="8"><p>Manage Swarm</p></td>
+<td><p>ca</p></td>
+<td><p>Display and rotate the root CA</p></td>
+</tr>
+<tr class="row-even"><td><p>init</p></td>
+<td><p>Initialize a swarm</p></td>
+</tr>
+<tr class="row-odd"><td><p>join</p></td>
+<td><p>Join a swarm as a node and/or manager</p></td>
+</tr>
+<tr class="row-even"><td><p>join-token</p></td>
+<td><p>Manager join tokens</p></td>
+</tr>
+<tr class="row-odd"><td><p>leave</p></td>
+<td><p>Leave the swarm</p></td>
+</tr>
+<tr class="row-even"><td><p>unlock</p></td>
+<td><p>Unlock swarm</p></td>
+</tr>
+<tr class="row-odd"><td><p>unlock-key</p></td>
+<td><p>Manage the unlock key</p></td>
+</tr>
+<tr class="row-even"><td><p>update</p></td>
+<td><p>Update the swarm</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>system</p></td>
+<td rowspan="4"><p>Manage Docker</p></td>
+<td><p>df</p></td>
+<td><p>Show docker disk usage</p></td>
+</tr>
+<tr class="row-even"><td><p>events</p></td>
+<td><p>Get real time events from the server</p></td>
+</tr>
+<tr class="row-odd"><td><p>info</p></td>
+<td><p>Display system-wide information</p></td>
+</tr>
+<tr class="row-even"><td><p>prune</p></td>
+<td><p>Remove unused data</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="6"><p>trust</p></td>
+<td rowspan="6"><p>Manage trust on Docker images (experimental)</p></td>
+<td><p>key</p></td>
+<td><p>Manage keys for signing Docker images (experimental)</p></td>
+</tr>
+<tr class="row-even"><td><p>signer</p></td>
+<td><p>Manage entities who can sign Docker images (experimental)</p></td>
+</tr>
+<tr class="row-odd"><td><p>inspect</p></td>
+<td><p>Return low-level information about keys and signatures</p></td>
+</tr>
+<tr class="row-even"><td><p>revoke</p></td>
+<td><p>Remove trust for an image</p></td>
+</tr>
+<tr class="row-odd"><td><p>sign</p></td>
+<td><p>Sign an image</p></td>
+</tr>
+<tr class="row-even"><td><p>view</p></td>
+<td><p>Display detailed information about keys and signatures</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="5"><p>volume</p></td>
+<td rowspan="5"><p>Manage volumes</p></td>
+<td><p>create</p></td>
+<td><p>Create a volume</p></td>
+</tr>
+<tr class="row-even"><td><p>inspect</p></td>
+<td><p>Display detailed information on one or more volumes</p></td>
+</tr>
+<tr class="row-odd"><td><p>ls</p></td>
+<td><p>List volumes</p></td>
+</tr>
+<tr class="row-even"><td><p>prune</p></td>
+<td><p>Remove all unused volumes</p></td>
+</tr>
+<tr class="row-odd"><td><p>rm</p></td>
+<td><p>Remove one or more volumes</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id4">
+<h2>状态转换<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<img alt="../../_images/docker_event_stats.jpg" src="../../_images/docker_event_stats.jpg" />
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Docker</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../container.html">容器</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Renkeju.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/container/docker/base_use.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
